@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Update this property group for every regular release -->
+  <PropertyGroup>
+    <ReleaseNotes></ReleaseNotes>
+    <Version>0.9.2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Summary>Annotations to maintain the C4 model for software architecture in code</Summary>
+    <Description>Structurizr Annotations lets you use .NET attributes to declare components and their relationships using the C4 model for software architecture.</Description>
+    <Authors>Structurizr Limited</Authors>
+    <Copyright>Copyright 2017</Copyright>
+    <PackageLicenseUrl>https://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://structurizr.com</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/structurizr/dotnet</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.0;net20;portable40-net40+sl4+win8+wp7;portable40-net40+sl5+win8+wp8+wpa81</TargetFrameworks>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Structurizr.Annotations.xml</DocumentationFile>
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'portable40-net40+sl4+win8+wp7'">
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile2</TargetFrameworkProfile>
+    <DefineConstants>$(DefineConstants);PORTABLE2</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'portable40-net40+sl5+win8+wp8+wpa81'">
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile328</TargetFrameworkProfile>
+    <DefineConstants>$(DefineConstants);PORTABLE328</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net20'">
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <DefineConstants>$(DefineConstants);NET20</DefineConstants>
+    <FrameworkPathOverride>$(windir)\Microsoft.NET\Framework\v2.0.50727</FrameworkPathOverride>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.0'">
+    <PackageReference Include="System.Runtime">
+      <Version>4.1.0</Version>
+    </PackageReference>
+  </ItemGroup>
+</Project>

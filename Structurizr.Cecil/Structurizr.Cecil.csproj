@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Update this property group for every regular release -->
+  <PropertyGroup>
+    <ReleaseNotes></ReleaseNotes>
+    <Version>0.9.2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>Mono.Cecil based software architecture analysis for Structurizr.Core</Description>
+    <Authors>Structurizr Limited</Authors>
+    <Copyright>Copyright 2017</Copyright>
+    <PackageLicenseUrl>https://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://structurizr.com</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/structurizr/dotnet</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.10.0" />
+    <PackageReference Include="Structurizr.Core" Version="0.9.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Structurizr.Analysis\Structurizr.Analysis.csproj" />
+    <ProjectReference Include="..\Structurizr.Annotations\Structurizr.Annotations.csproj" />
+  </ItemGroup>
+
+</Project>

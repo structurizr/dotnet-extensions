@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net452</TargetFramework>
+    <StartupObject>Structurizr.Examples.ContosoUniversity</StartupObject>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Structurizr.Client" Version="0.9.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Structurizr.Annotations\Structurizr.Annotations.csproj" />
+    <ProjectReference Include="..\Structurizr.Reflection\Structurizr.Reflection.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Runtime" />
+  </ItemGroup>
+</Project>

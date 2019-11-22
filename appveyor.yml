@@ -1,0 +1,23 @@
+version: 1.0.{build}
+pull_requests:
+  do_not_increment_build_number: true
+image: Visual Studio 2017
+build_script:
+- ps: >-
+    dotnet restore
+
+    dotnet build
+
+
+    dotnet clean /p:Configuration=Release
+
+    if ($env:APPVEYOR_REPO_TAG -Eq "true") {
+        dotnet msbuild "/t:Restore;Pack" /p:Configuration=Release /p:Version=$env:APPVEYOR_REPO_TAG_NAME
+    } else {
+        dotnet msbuild "/t:Restore;Pack" /p:Configuration=Release /p:VersionSuffix=pre${env:APPVEYOR_BUILD_NUMBER}-$($env:APPVEYOR_REPO_COMMIT.Substring(0,8))
+    }
+test_script:
+- ps: dotnet test .\Structurizr.AdrTools.Tests\Structurizr.AdrTools.Tests.csproj
+- ps: dotnet test .\Structurizr.PlantUML.Tests\Structurizr.PlantUML.Tests.csproj
+artifacts:
+- path: '*\bin\Release\*.nupkg'
