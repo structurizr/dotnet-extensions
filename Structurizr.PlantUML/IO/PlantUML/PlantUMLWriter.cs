@@ -373,7 +373,7 @@ namespace Structurizr.IO.PlantUML
             }
         }
 
-        private string TypeOf(Element e)
+        public virtual string TypeOf(Element e)
         {
             if (e is Person)
             {
