@@ -16,12 +16,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Mono.Cecil" Version="0.10.0" />
-    <PackageReference Include="Structurizr.Core" Version="0.9.6" />
+    <PackageReference Include="Structurizr.Core" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

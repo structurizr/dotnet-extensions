@@ -165,13 +165,20 @@ namespace Structurizr.IO.C4PlantUML
         {
             if (String.IsNullOrWhiteSpace(s)) return "";
 
-            s = s
-                .Trim('/')
-                .Replace(" ", "")
-                .Replace("-", "")
-                .Replace("[", "")
-                .Replace("]", "")
-                .Replace("/", "__");
+            // canonically name calculation changed
+            // a) instead of "/" starts with "{ElementType}://"; remove it that it is compatible with old impl.
+            // b) deployment namespaces are added with "/"; remove it that it is shorter (unique parts created via hash)
+            // c) orig "/" in static namespaces replaced with "."; replace with "__" that it is compatible with old impl.
+            var p = s.LastIndexOf('/');
+            if (p >= 0)
+                s = s.Substring(p + 1);
+
+            s = s.Replace(" ", "")
+                 .Replace("-", "")
+                 .Replace("[", "")
+                 .Replace("]", "")
+                 .Replace(".", "__");
+
             if (hash.HasValue)
             {
                 s = s + "__" + hash.Value.ToString("x");

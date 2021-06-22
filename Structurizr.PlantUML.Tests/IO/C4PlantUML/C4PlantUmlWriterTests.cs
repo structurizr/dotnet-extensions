@@ -383,23 +383,23 @@ endlegend
 !define Node(e_alias, e_label, e_techn) rectangle ""==e_label\n<size:TECHN_FONT_SIZE>[e_techn]</size>"" <<node>> as e_alias
 
 ' Structurizr.DeploymentView: DevelopmentDeployment
-title Internet Banking System - Deployment
+title Internet Banking System - Deployment - Development
 
 LAYOUT_WITH_LEGEND()
 
-Node(Deployment__Development__DeveloperLaptop__389f399, ""Developer Laptop"", ""Microsoft Windows 10 or Apple </size>\n<size:TECHN_FONT_SIZE>macOS"") {
-  Node(Deployment__Development__DeveloperLaptop__DockerContainerWebServer__1b73d2e, ""Docker Container - Web Server"", ""Docker"") {
-    Node(Deployment__Development__DeveloperLaptop__DockerContainerWebServer__ApacheTomcat__1cc9f55, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
+Node(DeveloperLaptop__389f399, ""Developer Laptop"", ""Microsoft Windows 10 or Apple </size>\n<size:TECHN_FONT_SIZE>macOS"") {
+  Node(DockerContainerWebServer__1b73d2e, ""Docker Container - Web Server"", ""Docker"") {
+    Node(ApacheTomcat__1cc9f55, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
       Container(InternetBankingSystem__WebApplication1__28f79f6, ""Web Application"", ""Java and Spring MVC"", ""Delivers the static content and the Internet banking single page application."")
       Container(InternetBankingSystem__APIApplication1__1f227f4, ""API Application"", ""Java and Spring MVC"", ""Provides Internet banking functionality via a JSON/HTTPS API."")
     }
   }
-  Node(Deployment__Development__DeveloperLaptop__DockerContainerDatabaseServer__2eae566, ""Docker Container - Database Server"", ""Docker"") {
-    Node(Deployment__Development__DeveloperLaptop__DockerContainerDatabaseServer__DatabaseServer__24d13de, ""Database Server"", ""Oracle 12c"") {
+  Node(DockerContainerDatabaseServer__2eae566, ""Docker Container - Database Server"", ""Docker"") {
+    Node(DatabaseServer__24d13de, ""Database Server"", ""Oracle 12c"") {
       ContainerDb(InternetBankingSystem__Database1__3296ca6, ""Database"", ""Relational Database Schema"", ""Stores user registration information, hashed authentication credentials, access logs, etc."")
     }
   }
-  Node(Deployment__Development__DeveloperLaptop__WebBrowser__3930fd, ""Web Browser"", ""Google Chrome, Mozilla </size>\n<size:TECHN_FONT_SIZE>Firefox, Apple Safari or </size>\n<size:TECHN_FONT_SIZE>Microsoft Edge"") {
+  Node(WebBrowser__3930fd, ""Web Browser"", ""Google Chrome, Mozilla </size>\n<size:TECHN_FONT_SIZE>Firefox, Apple Safari or </size>\n<size:TECHN_FONT_SIZE>Microsoft Edge"") {
     Container(InternetBankingSystem__SinglePageApplication1__bbe85d, ""Single-Page Application"", ""JavaScript and Angular"", ""Provides all of the Internet banking functionality to customers via their web browser."")
   }
 }
@@ -450,46 +450,46 @@ endlegend
 !define Node(e_alias, e_label, e_techn) rectangle ""==e_label\n<size:TECHN_FONT_SIZE>[e_techn]</size>"" <<node>> as e_alias
 
 ' Structurizr.DeploymentView: LiveDeployment
-title Internet Banking System - Deployment
+title Internet Banking System - Deployment - Live
 
 LAYOUT_WITH_LEGEND()
 
-Node(Deployment__Live__BigBankplc__3ffe15e, ""Big Bank plc"", ""Big Bank plc data center"") {
-  Node(Deployment__Live__BigBankplc__bigbankweb***__3f92e18, ""bigbank-web*** (x4)"", ""Ubuntu 16.04 LTS"") {
-    Node(Deployment__Live__BigBankplc__bigbankweb***__ApacheTomcat__27b4383, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
-      Container(InternetBankingSystem__WebApplication2__1720850, ""Web Application"", ""Java and Spring MVC"", ""Delivers the static content and the Internet banking single page application."")
+Node(BigBankplc__3ffe15e, ""Big Bank plc"", ""Big Bank plc data center"") {
+  Node(bigbankweb***__3f92e18, ""bigbank-web*** (x4)"", ""Ubuntu 16.04 LTS"") {
+    Node(ApacheTomcat__27b4383, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
+      Container(InternetBankingSystem__WebApplication1__1720850, ""Web Application"", ""Java and Spring MVC"", ""Delivers the static content and the Internet banking single page application."")
     }
   }
-  Node(Deployment__Live__BigBankplc__bigbankapi***__263d9e8, ""bigbank-api*** (x8)"", ""Ubuntu 16.04 LTS"") {
-    Node(Deployment__Live__BigBankplc__bigbankapi***__ApacheTomcat__3b84ab, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
-      Container(InternetBankingSystem__APIApplication2__1408a33, ""API Application"", ""Java and Spring MVC"", ""Provides Internet banking functionality via a JSON/HTTPS API."")
+  Node(bigbankapi***__263d9e8, ""bigbank-api*** (x8)"", ""Ubuntu 16.04 LTS"") {
+    Node(ApacheTomcat__3b84ab, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
+      Container(InternetBankingSystem__APIApplication1__1408a33, ""API Application"", ""Java and Spring MVC"", ""Provides Internet banking functionality via a JSON/HTTPS API."")
     }
   }
-  Node(Deployment__Live__BigBankplc__bigbankdb01__35ec592, ""bigbank-db01"", ""Ubuntu 16.04 LTS"") {
-    Node(Deployment__Live__BigBankplc__bigbankdb01__OraclePrimary__19fd8f, ""Oracle - Primary"", ""Oracle 12c"") {
-      ContainerDb(InternetBankingSystem__Database2__1c974ec, ""Database"", ""Relational Database Schema"", ""Stores user registration information, hashed authentication credentials, access logs, etc."")
+  Node(bigbankdb01__35ec592, ""bigbank-db01"", ""Ubuntu 16.04 LTS"") {
+    Node(OraclePrimary__19fd8f, ""Oracle - Primary"", ""Oracle 12c"") {
+      ContainerDb(InternetBankingSystem__Database1__1c974ec, ""Database"", ""Relational Database Schema"", ""Stores user registration information, hashed authentication credentials, access logs, etc."")
     }
   }
-  Node(Deployment__Live__BigBankplc__bigbankdb02__1db08a2, ""bigbank-db02"", ""Ubuntu 16.04 LTS"") {
-    Node(Deployment__Live__BigBankplc__bigbankdb02__OracleSecondary__1c4ec22, ""Oracle - Secondary"", ""Oracle 12c"") {
-      ContainerDb(InternetBankingSystem__Database3__d89394, ""Database"", ""Relational Database Schema"", ""Stores user registration information, hashed authentication credentials, access logs, etc."")
+  Node(bigbankdb02__1db08a2, ""bigbank-db02"", ""Ubuntu 16.04 LTS"") {
+    Node(OracleSecondary__1c4ec22, ""Oracle - Secondary"", ""Oracle 12c"") {
+      ContainerDb(InternetBankingSystem__Database1__d89394, ""Database"", ""Relational Database Schema"", ""Stores user registration information, hashed authentication credentials, access logs, etc."")
     }
   }
 }
-Node(Deployment__Live__Customer'scomputer__2510bf3, ""Customer's computer"", ""Microsoft Windows or Apple </size>\n<size:TECHN_FONT_SIZE>macOS"") {
-  Node(Deployment__Live__Customer'scomputer__WebBrowser__ba951, ""Web Browser"", ""Google Chrome, Mozilla </size>\n<size:TECHN_FONT_SIZE>Firefox, Apple Safari or </size>\n<size:TECHN_FONT_SIZE>Microsoft Edge"") {
-    Container(InternetBankingSystem__SinglePageApplication2__298b31c, ""Single-Page Application"", ""JavaScript and Angular"", ""Provides all of the Internet banking functionality to customers via their web browser."")
+Node(Customer'scomputer__2510bf3, ""Customer's computer"", ""Microsoft Windows or Apple </size>\n<size:TECHN_FONT_SIZE>macOS"") {
+  Node(WebBrowser__ba951, ""Web Browser"", ""Google Chrome, Mozilla </size>\n<size:TECHN_FONT_SIZE>Firefox, Apple Safari or </size>\n<size:TECHN_FONT_SIZE>Microsoft Edge"") {
+    Container(InternetBankingSystem__SinglePageApplication1__298b31c, ""Single-Page Application"", ""JavaScript and Angular"", ""Provides all of the Internet banking functionality to customers via their web browser."")
   }
 }
-Node(Deployment__Live__Customer'smobiledevice__1d6bcb6, ""Customer's mobile device"", ""Apple iOS or Android"") {
+Node(Customer'smobiledevice__1d6bcb6, ""Customer's mobile device"", ""Apple iOS or Android"") {
   Container(InternetBankingSystem__MobileApp1__d004b3, ""Mobile App"", ""Xamarin"", ""Provides a limited subset of the Internet banking functionality to customers via their mobile device."")
 }
-Rel(InternetBankingSystem__APIApplication2__1408a33, InternetBankingSystem__Database2__1c974ec, ""Reads from and writes to"", ""JDBC"")
-Rel(InternetBankingSystem__APIApplication2__1408a33, InternetBankingSystem__Database3__d89394, ""Reads from and writes to"", ""JDBC"")
-Rel(InternetBankingSystem__MobileApp1__d004b3, InternetBankingSystem__APIApplication2__1408a33, ""Makes API calls to"", ""JSON/HTTPS"")
-Rel(InternetBankingSystem__SinglePageApplication2__298b31c, InternetBankingSystem__APIApplication2__1408a33, ""Makes API calls to"", ""JSON/HTTPS"")
-Rel_Up(InternetBankingSystem__WebApplication2__1720850, InternetBankingSystem__SinglePageApplication2__298b31c, ""Delivers to the customer's web browser"")
-Rel_Left(Deployment__Live__BigBankplc__bigbankdb01__OraclePrimary__19fd8f, Deployment__Live__BigBankplc__bigbankdb02__OracleSecondary__1c4ec22, ""Replicates data to"")
+Rel(InternetBankingSystem__APIApplication1__1408a33, InternetBankingSystem__Database1__1c974ec, ""Reads from and writes to"", ""JDBC"")
+Rel(InternetBankingSystem__APIApplication1__1408a33, InternetBankingSystem__Database1__d89394, ""Reads from and writes to"", ""JDBC"")
+Rel(InternetBankingSystem__MobileApp1__d004b3, InternetBankingSystem__APIApplication1__1408a33, ""Makes API calls to"", ""JSON/HTTPS"")
+Rel_Left(OraclePrimary__19fd8f, OracleSecondary__1c4ec22, ""Replicates data to"")
+Rel(InternetBankingSystem__SinglePageApplication1__298b31c, InternetBankingSystem__APIApplication1__1408a33, ""Makes API calls to"", ""JSON/HTTPS"")
+Rel_Up(InternetBankingSystem__WebApplication1__1720850, InternetBankingSystem__SinglePageApplication1__298b31c, ""Delivers to the customer's web browser"")
 @enduml
 
 ".UnifyNewLine().UnifyHashValues(), _stringWriter.ToString().UnifyHashValues());
@@ -504,9 +504,9 @@ Rel_Left(Deployment__Live__BigBankplc__bigbankdb01__OraclePrimary__19fd8f, Deplo
             // all SystemLandscapeView, SystemContext, ... (update relation): 
             //     Rel_Up(EmailSystem, PersonalBankingCustomer, ""Sends e-mails to"")
             //     Rel_Right(InternetBankingSystem, EmailSystem, ""Sends e-mail using"")
-            var emailSystem = workspace.Model.GetElementWithCanonicalName("/E-mail System");
-            var personalBankingCustomer = workspace.Model.GetElementWithCanonicalName("/Personal Banking Customer");
-            var internetBankingSystem = workspace.Model.GetElementWithCanonicalName("/Internet Banking System");
+            var emailSystem = workspace.Model.GetElementWithCanonicalOrStaticalName("SoftwareSystem://E-mail System");
+            var personalBankingCustomer = workspace.Model.GetElementWithCanonicalOrStaticalName("Person://Personal Banking Customer");
+            var internetBankingSystem = workspace.Model.GetElementWithCanonicalOrStaticalName("SoftwareSystem://Internet Banking System");
 
             var systemLandscapeView = workspace.Views.SystemLandscapeViews.First();
             systemLandscapeView.Relationships
@@ -519,7 +519,7 @@ Rel_Left(Deployment__Live__BigBankplc__bigbankdb01__OraclePrimary__19fd8f, Deplo
                 .SetDirection(DirectionValues.Right);
 
             // but only SystemLandscapeView should use Down relations, therefore add the tags relation view specific (via AddViewTags)
-            var mainframeBankingSystem = workspace.Model.GetElementWithCanonicalName("/Mainframe Banking System");
+            var mainframeBankingSystem = workspace.Model.GetElementWithCanonicalOrStaticalName("SoftwareSystem://Mainframe Banking System");
             foreach (var relationshipView in systemLandscapeView.Relationships
                 .Where(rv => rv.Relationship.DestinationId == mainframeBankingSystem.Id))
             {
@@ -537,12 +537,12 @@ Rel_Left(Deployment__Live__BigBankplc__bigbankdb01__OraclePrimary__19fd8f, Deplo
             //     Rel_Right(InternetBankingSystem__SinglePageApplication, InternetBankingSystem__APIApplication__SignInController, ...)
             //     Rel_Right(InternetBankingSystem__APIApplication__SecurityComponent, InternetBankingSystem__Database, ...)
             var singlePageApplication =
-                workspace.Model.GetElementWithCanonicalName("/Internet Banking System/Single-Page Application");
+                workspace.Model.GetElementWithCanonicalOrStaticalName("Container://Internet Banking System.Single-Page Application");
             var signInController =
-                workspace.Model.GetElementWithCanonicalName("/Internet Banking System/API Application/Sign In Controller");
+                workspace.Model.GetElementWithCanonicalOrStaticalName("Component://Internet Banking System.API Application.Sign In Controller");
             var securityComponent =
-                workspace.Model.GetElementWithCanonicalName("/Internet Banking System/API Application/Security Component");
-            var database = workspace.Model.GetElementWithCanonicalName("/Internet Banking System/Database") as Container;
+                workspace.Model.GetElementWithCanonicalOrStaticalName("Component://Internet Banking System.API Application.Security Component");
+            var database = workspace.Model.GetElementWithCanonicalOrStaticalName("Container://Internet Banking System.Database") as Container;
             database.SetIsDatabase(true);
             var dynamicView = workspace.Views.DynamicViews.First();
             dynamicView.Relationships
@@ -555,10 +555,8 @@ Rel_Left(Deployment__Live__BigBankplc__bigbankdb01__OraclePrimary__19fd8f, Deplo
 
             // ContainerView
             //     Rel_Up(InternetBankingSystem__WebApplication, InternetBankingSystem__SinglePageApplication, "Delivers to the customer's web browser")
-            var apiApplication = workspace.Model.GetElementWithCanonicalName("/Internet Banking System/API Application");
-            var webApplication = workspace.Model.GetElementWithCanonicalName("/Internet Banking System/Web Application");
-
-
+            var apiApplication = workspace.Model.GetElementWithCanonicalOrStaticalName("Container://Internet Banking System.API Application");
+            var webApplication = workspace.Model.GetElementWithCanonicalOrStaticalName("Container://Internet Banking System.Web Application");
             var containerView = workspace.Views.ContainerViews.First();
             containerView.Relationships
                 .First(r => r.Relationship.SourceId == apiApplication.Id &&
@@ -584,29 +582,34 @@ Rel_Left(Deployment__Live__BigBankplc__bigbankdb01__OraclePrimary__19fd8f, Deplo
             // DeploymentView´(with already copied relations): DevelopmentDeployment, LiveDeployment
             //     Rel_Up(InternetBankingSystem__WebApplication1, InternetBankingSystem__SinglePageApplication1, "Delivers to the customer's web browser") 
             //     Rel_Up(InternetBankingSystem__WebApplication2, InternetBankingSystem__SinglePageApplication2, "Delivers to the customer's web browser")
-            //     Rel_Left(Deployment__Live__BigBankplc__bigbankdb01__OraclePrimary, Deployment__Live__BigBankplc__bigbankdb02__OracleSecondary, "Replicates data to")
-            var webApplication1 = workspace.Model.GetElementWithCanonicalName("/Internet Banking System/Web Application[1]");
-            var webApplication2 = workspace.Model.GetElementWithCanonicalName("/Internet Banking System/Web Application[2]");
-            var singlePageApplication1 =
-                workspace.Model.GetElementWithCanonicalName("/Internet Banking System/Single-Page Application[1]");
-            var singlePageApplication2 =
-                workspace.Model.GetElementWithCanonicalName("/Internet Banking System/Single-Page Application[2]");
-            var oraclePrimary =
-                workspace.Model.GetElementWithCanonicalName("/Deployment/Live/Big Bank plc/bigbank-db01/Oracle - Primary");
-            var oracleSecondary =
-                workspace.Model.GetElementWithCanonicalName("/Deployment/Live/Big Bank plc/bigbank-db02/Oracle - Secondary");
+            //     Rel_Left(Live__BigBankplc__bigbankdb01__OraclePrimary, Live__BigBankplc__bigbankdb02__OracleSecondary, "Replicates data to")
+
+            // Model is changed that instances are counted per parent orig ...[2] cannot be used anymore, separate per view, full names have to be used
+            var developmentWebApplication = 
+                workspace.Model.GetElementWithCanonicalOrStaticalName("ContainerInstance://Development/Developer Laptop/Docker Container - Web Server/Apache Tomcat/Internet Banking System.Web Application[1]");
+            var developmentSinglePageApplication =
+                workspace.Model.GetElementWithCanonicalOrStaticalName("ContainerInstance://Development/Developer Laptop/Web Browser/Internet Banking System.Single-Page Application[1]");
             var developmentDeploymentView = workspace.Views.DeploymentViews.First();
-            var liveDeploymentView = workspace.Views.DeploymentViews.Last();
             developmentDeploymentView.Relationships
-                .First(r => r.Relationship.SourceId == webApplication1.Id &&
-                            r.Relationship.DestinationId == singlePageApplication1.Id)
+                .First(r => r.Relationship.SourceId == developmentWebApplication.Id &&
+                            r.Relationship.DestinationId == developmentSinglePageApplication.Id)
+                .SetDirection(DirectionValues.Up);
+
+            var liveWebApplication = 
+                workspace.Model.GetElementWithCanonicalOrStaticalName("ContainerInstance://Live/Big Bank plc/bigbank-web***/Apache Tomcat/Internet Banking System.Web Application[1]");
+            var liveSinglePageApplication =
+                workspace.Model.GetElementWithCanonicalOrStaticalName("ContainerInstance://Live/Customer's computer/Web Browser/Internet Banking System.Single-Page Application[1]");
+            var liveOraclePrimary =
+                workspace.Model.GetElementWithCanonicalOrStaticalName("DeploymentNode://Live/Big Bank plc/bigbank-db01/Oracle - Primary");
+            var liveOracleSecondary =
+                workspace.Model.GetElementWithCanonicalOrStaticalName("DeploymentNode://Live/Big Bank plc/bigbank-db02/Oracle - Secondary");
+            var liveDeploymentView = workspace.Views.DeploymentViews.Last();
+            liveDeploymentView.Relationships
+                .First(r => r.Relationship.SourceId == liveWebApplication.Id &&
+                            r.Relationship.DestinationId == liveSinglePageApplication.Id)
                 .SetDirection(DirectionValues.Up);
             liveDeploymentView.Relationships
-                .First(r => r.Relationship.SourceId == webApplication2.Id &&
-                            r.Relationship.DestinationId == singlePageApplication2.Id)
-                .SetDirection(DirectionValues.Up);
-            liveDeploymentView.Relationships
-                .First(r => r.Relationship.SourceId == oraclePrimary.Id && r.Relationship.DestinationId == oracleSecondary.Id)
+                .First(r => r.Relationship.SourceId == liveOraclePrimary.Id && r.Relationship.DestinationId == liveOracleSecondary.Id)
                 .SetDirection(DirectionValues.Left);
         }
 
@@ -721,17 +724,17 @@ Interact2(""3"", SoftwareSystem__WebApplication__SomeRepository__6d9009, Softwar
 !includeurl https://raw.githubusercontent.com/kirchsth/C4-PlantUML/master/C4_Deployment.puml
 
 ' Structurizr.DeploymentView: deployment
-title Software System - Deployment
+title Software System - Deployment - Default
 
 LAYOUT_WITH_LEGEND()
 
-Node(Deployment__Default__DatabaseServer__1edef6c, ""Database Server"", ""Ubuntu 12.04 LTS"") {
-  Node(Deployment__Default__DatabaseServer__MySQL__1fa4f18, ""MySQL"", ""MySQL 5.5.x"") {
+Node(DatabaseServer__1edef6c, ""Database Server"", ""Ubuntu 12.04 LTS"") {
+  Node(MySQL__1fa4f18, ""MySQL"", ""MySQL 5.5.x"") {
     ContainerDb(SoftwareSystem__Database1__bb9c73, ""Database"", ""Relational Database Schema"", ""Stores information"")
   }
 }
-Node(Deployment__Default__WebServer__1e2ffe, ""Web Server"", ""Ubuntu 12.04 LTS"") {
-  Node(Deployment__Default__WebServer__ApacheTomcat__2b8afb4, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
+Node(WebServer__1e2ffe, ""Web Server"", ""Ubuntu 12.04 LTS"") {
+  Node(ApacheTomcat__2b8afb4, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
     Container(SoftwareSystem__WebApplication1__31f1f25, ""Web Application"", ""Java and spring MVC"", ""Delivers content"")
   }
 }
@@ -1155,17 +1158,17 @@ endlegend
 !define Node(e_alias, e_label, e_techn) rectangle ""==e_label\n<size:TECHN_FONT_SIZE>[e_techn]</size>"" <<node>> as e_alias
 
 ' Structurizr.DeploymentView: deployment
-title Software System - Deployment
+title Software System - Deployment - Default
 
 LAYOUT_WITH_LEGEND()
 
-Node(Deployment__Default__DatabaseServer__1edef6c, ""Database Server"", ""Ubuntu 12.04 LTS"") {
-  Node(Deployment__Default__DatabaseServer__MySQL__1fa4f18, ""MySQL"", ""MySQL 5.5.x"") {
+Node(DatabaseServer__1edef6c, ""Database Server"", ""Ubuntu 12.04 LTS"") {
+  Node(MySQL__1fa4f18, ""MySQL"", ""MySQL 5.5.x"") {
     ContainerDb(SoftwareSystem__Database1__bb9c73, ""Database"", ""Relational Database Schema"", ""Stores information"")
   }
 }
-Node(Deployment__Default__WebServer__1e2ffe, ""Web Server"", ""Ubuntu 12.04 LTS"") {
-  Node(Deployment__Default__WebServer__ApacheTomcat__2b8afb4, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
+Node(WebServer__1e2ffe, ""Web Server"", ""Ubuntu 12.04 LTS"") {
+  Node(ApacheTomcat__2b8afb4, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
     Container(SoftwareSystem__WebApplication1__31f1f25, ""Web Application"", ""Java and spring MVC"", ""Delivers content"")
   }
 }
@@ -1189,17 +1192,17 @@ Rel(SoftwareSystem__WebApplication1__31f1f25, SoftwareSystem__Database1__bb9c73,
 !includeurl https://raw.githubusercontent.com/kirchsth/C4-PlantUML/master/C4_Deployment.puml
 
 ' Structurizr.DeploymentView: deployment
-title Software System - Deployment
+title Software System - Deployment - Default
 
 LAYOUT_WITH_LEGEND()
 
-Node(Deployment__Default__DatabaseServer__1edef6c, ""Database Server"", ""Ubuntu 12.04 LTS"") {
-  Node(Deployment__Default__DatabaseServer__MySQL__1fa4f18, ""MySQL"", ""MySQL 5.5.x"") {
+Node(DatabaseServer__1edef6c, ""Database Server"", ""Ubuntu 12.04 LTS"") {
+  Node(MySQL__1fa4f18, ""MySQL"", ""MySQL 5.5.x"") {
     ContainerDb(SoftwareSystem__Database1__bb9c73, ""Database"", ""Relational Database Schema"", ""Stores information"")
   }
 }
-Node(Deployment__Default__WebServer__1e2ffe, ""Web Server"", ""Ubuntu 12.04 LTS"") {
-  Node(Deployment__Default__WebServer__ApacheTomcat__2b8afb4, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
+Node(WebServer__1e2ffe, ""Web Server"", ""Ubuntu 12.04 LTS"") {
+  Node(ApacheTomcat__2b8afb4, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
     Container(SoftwareSystem__WebApplication1__31f1f25, ""Web Application"", ""Java and spring MVC"", ""Delivers content"")
   }
 }

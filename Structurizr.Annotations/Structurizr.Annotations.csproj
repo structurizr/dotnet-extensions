@@ -17,7 +17,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
+<!--
     <TargetFrameworks>netstandard1.0;net20;portable40-net40+sl4+win8+wp7;portable40-net40+sl5+win8+wp8+wpa81</TargetFrameworks>
+
+    <TargetFrameworks>netstandard1.0;netstandard2.0;net20;portable40-net40+sl4+win8+wp7;portable40-net40+sl5+win8+wp8+wpa81</TargetFrameworks>
+-->
+    <TargetFrameworks>netstandard2.0;net20</TargetFrameworks>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Structurizr.Annotations.xml</DocumentationFile>
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
   </PropertyGroup>
@@ -48,4 +53,11 @@
       <Version>4.1.0</Version>
     </PackageReference>
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Runtime">
+      <Version>4.1.0</Version>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>

@@ -90,11 +90,15 @@ namespace Structurizr.AdrTools
         private string CalculateUrl(SoftwareSystem softwareSystem, string id)
         {
             if (softwareSystem == null) {
-                return "#/:" + UrlEncode(id);
+                // sync with java impl
+                return "#" + UrlEncode("/") + ":" + UrlEncode(id);
             }
             else
             {
-                return "#" + UrlEncode(softwareSystem.CanonicalName) + ":" + UrlEncode(id);
+                //CanonicalName impl changed: old "/", new "SoftwareSystem://" (CanonicalNameGenerator.SoftwareSystemType)
+                var name = softwareSystem.CanonicalName;
+                name = name.Substring("SoftwareSystem:/".Length); // last "/" is reused
+                return "#" + UrlEncode(name) + ":" + UrlEncode(id);
             }
         }
 

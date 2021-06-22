@@ -7,7 +7,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Structurizr.Client" Version="0.9.3" />
+    <PackageReference Include="Structurizr.Client" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Structurizr.Annotations\Structurizr.Annotations.csproj" />
