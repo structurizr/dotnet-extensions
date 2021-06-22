@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Runtime" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Structurizr.Analysis\Structurizr.Analysis.csproj" />
     <ProjectReference Include="..\Structurizr.Annotations\Structurizr.Annotations.csproj" />
   </ItemGroup>
