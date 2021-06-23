@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Structurizr.PlantUML.IO.C4PlantUML;
 
 namespace Structurizr.IO.C4PlantUML.ModelExtensions
 {
@@ -27,9 +28,9 @@ namespace Structurizr.IO.C4PlantUML.ModelExtensions
             {
                 var all = model.GetElements().Select(e => e.CanonicalName).ToList();
                 var combined = string.Join("\n", all);
-                combined = combined;
+                throw new C4PlantUmlException(
+                    $"Element {canonicalName} could not be found. Following elements exist:\n{combined}");
             }
-
             return found;
         }
     }
