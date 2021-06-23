@@ -1,16 +1,14 @@
 # C4-PlantUML
 
-Structurizr for .NET also includes a simple exporter that can create diagram definitions compatible with [C4-PlantUML](https://github.com/RicardoNiepel/C4-PlantUML). The following diagram types are supported:
+Structurizr for .NET also includes a simple exporter that can create diagram definitions compatible with [C4-PlantUML v2.2.0](https://github.com/plantuml-stdlib/C4-PlantUML).
+Following diagram types are supported:
 
 - Enterprise Context
 - System Context
 - Container
 - Component
-- Dynamic*
-- Deployment*
-
-*..Dynamic and Deployment diagrams are part of an open pull request (from https://github.com/kirchsth/C4-PlantUML). The diagrams can use the definitions via 
-CustomBaseUrl=https://raw.githubusercontent.com/kirchsth/C4-PlantUML/extended/ or if it is not set then the definition is merged in each diagram)
+- Dynamic
+- Deployment
 
 Simply create your software architecture model and views as usual, and use the [C4PlantUMLWriter](../Structurizr.PlantUML/IO/C4PlantUML/C4PlantUMLWriter.cs) class to export the views. [For example](../Structurizr.Examples/C4PlantUML.cs):
 
@@ -53,13 +51,13 @@ This code will generate and output a PlantUML diagram definition that looks like
 ' Structurizr.SystemContextView: SystemContext
 title Software System - System Context
 
-LAYOUT_WITH_LEGEND()
-
 Enterprise_Boundary(SomeEnterprise, "Some Enterprise") {
   System(SoftwareSystem__33c0d9d, "Software System", "My software system.")
   Person(User__378734a, "User", "A user of my software system.")
 Rel_Right(User__378734a, SoftwareSystem__33c0d9d, "Uses")
 }
+
+SHOW_LEGEND()
 @enduml
 ```
 
@@ -100,8 +98,6 @@ This code will generate and output a PlantUML diagram definition that looks like
 ' Structurizr.ContainerView: containers
 title Software System - Containers
 
-LAYOUT_WITH_LEGEND()
-
 Person(User__378734a, "User", "A user of my software system.")
 System_Boundary(SoftwareSystem__33c0d9d, "Software System") {
   ContainerDb(SoftwareSystem__Database__202c666, "Database", "Relational Database Schema", "Stores information")
@@ -109,6 +105,8 @@ System_Boundary(SoftwareSystem__33c0d9d, "Software System") {
 }
 Rel(User__378734a, SoftwareSystem__WebApplication__2004eee, "uses", "HTTP")
 Rel_Right(SoftwareSystem__WebApplication__2004eee, SoftwareSystem__Database__202c666, "Reads from and writes to", "JDBC")
+
+SHOW_LEGEND()
 @enduml
 ```
 
