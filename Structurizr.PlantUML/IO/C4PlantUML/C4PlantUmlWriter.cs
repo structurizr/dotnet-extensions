@@ -6,6 +6,9 @@ using Structurizr.IO.C4PlantUML.ModelExtensions;
 
 // Source base version copied from https://gist.github.com/coldacid/465fa8f3a4cd3fdd7b640a65ad5b86f4 (https://github.com/structurizr/dotnet/issues/47) 
 // kirchsth: Extended with dynamic and deployment view
+// kirchsth: updated to update generated source to new C4PlantUml stdlib v2.2.0 (no additional dynamic and deployment view macros are required anymore, calls updated)
+// kirchsth: Add tags/styles support
+// kirchsth: next planed C4PlantUml stdlib v2.3.0 features can be used with CustomBaseUrl https://raw.githubusercontent.com/kirchsth/C4-PlantUML/extended/
 namespace Structurizr.IO.C4PlantUML
 {
     public class C4PlantUmlWriter : PlantUMLWriterBase
@@ -23,12 +26,13 @@ namespace Structurizr.IO.C4PlantUML
         public LayoutDirection? Layout { get; set; }
 
         /// <summary>
-        /// PlantUML-stdlib or https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/ does not support
-        /// dynamic or deployment diagrams. They can be used via the PlantUML-stdlib and in the diagram added definitions
-        /// or use a pull-request version which is available at https://raw.githubusercontent.com/kirchsth/C4-PlantUML/master/
+        /// C4PlantUml stdlib v2.2.0 () supports dynamic or deployment diagrams. They can be used via the PlantUML-stdlib and no 
+        /// special CustomBaseUrl is required.
+        /// Only next stdlib features (like Person shapes) has to be defined via CustomBaseUrl=https://raw.githubusercontent.com/kirchsth/C4-PlantUML/extended/
         /// (if the value is empty/null then PlantUML-stdlib with added definitions is used)
         /// </summary>
-        public string CustomBaseUrl { get; set; } = ""; // @"https://raw.githubusercontent.com/kirchsth/C4-PlantUML/master/";
+        public string CustomBaseUrl { get; set; } = ""; // @"https://raw.githubusercontent.com/kirchsth/C4-PlantUML/extended/";
+        public bool EnableNextFeatures { get; set; } = false;
 
         protected override void Write(SystemLandscapeView view, TextWriter writer)
         {
@@ -258,6 +262,11 @@ namespace Structurizr.IO.C4PlantUML
                 Write(containerInstance, writer, indentLevel + 1);
             }
 
+            foreach (SoftwareSystemInstance systemInstance in deploymentNode.SoftwareSystemInstances)
+            {
+                Write(systemInstance, writer, indentLevel + 1);
+            }
+
             writer.WriteLine($"{indent}}}");
         }
 
@@ -296,6 +305,11 @@ namespace Structurizr.IO.C4PlantUML
                 return "Container";
             }
 
+            if (e is SoftwareSystemInstance)
+            {
+                return "Software System";
+            }
+
             return "";
         }
 
@@ -307,6 +321,9 @@ namespace Structurizr.IO.C4PlantUML
 
         protected override void WriteProlog(View view, TextWriter writer)
         {
+            if (view == null) throw new ArgumentNullException(nameof(view));
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
+
             writer.WriteLine("@startuml");
 
             switch (view)
@@ -325,237 +342,15 @@ namespace Structurizr.IO.C4PlantUML
                     break;
 
                 case DynamicView _:
-                    if (!string.IsNullOrWhiteSpace(CustomBaseUrl))
-                    {
-                        writer.WriteLine($"!includeurl {CustomBaseUrl}C4_Dynamic.puml");
-                    }
-                    else
-                    {
-                        writer.WriteLine(@"!include <C4/C4_Component>");
-                        // Add missing deployment nodes (until they are part of the plantuml macros)
-                        writer.WriteLine(@"' C4_Dynamic.puml is missing, simulate it with following definitions");
-
-                        writer.WriteLine(@"' Scope: Interactions in an enterprise, software system or container.");
-                        writer.WriteLine(@"' Primary and supporting elements: Depends on the diagram scope - ");
-                        writer.WriteLine(@"'     enterprise - people and software systems related to the enterprise in scope ");
-                        writer.WriteLine(@"'     software system - see system context or container diagrams, ");
-                        writer.WriteLine(@"'     container - see component diagram.");
-                        writer.WriteLine(@"' Intended audience: Technical and non-technical people, inside and outside of the software development team.");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"' Dynamic diagram introduces (automatically) numbered interactions: ");
-                        writer.WriteLine(@"'     Interact(): used automatic calculated index, ");
-                        writer.WriteLine(@"'     Interact2(): index can be explicit defined,");
-                        writer.WriteLine(@"'     SetIndex(): set the next index, ");
-                        writer.WriteLine(@"'     GetIndex(): get the index and automatically increase index");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"' Index");
-                        writer.WriteLine(@"' ##################################");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!function $inc_($value, $step=1)");
-                        writer.WriteLine(@"  !return $value + $step");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!$index=1");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!function SetIndex($new_index)");
-                        writer.WriteLine(@"  !$index=$new_index");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!function GetIndex($auto_increase=1)");
-                        writer.WriteLine(@"  !$old = $index");
-                        writer.WriteLine(@"  !$index=$inc_($index, $auto_increase)");
-                        writer.WriteLine(@"  !return $old");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"' Interact");
-                        writer.WriteLine(@"' ##################################");
-                        writer.WriteLine(@"!define Interact2(e_index, e_from, e_to, e_label) Rel(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2(e_index, e_from, e_to, e_label, e_techn) Rel(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!define Interact2_Back(e_index, e_from, e_to, e_label) Rel_Back(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2_Back(e_index, e_from, e_to, e_label, e_techn) Rel_Back(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!define Interact2_Neighbor(e_index, e_from, e_to, e_label) Rel_Neighbor(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2_Neighbor(e_index, e_from, e_to, e_label, e_techn) Rel_Neighbor(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!define Interact2_Back_Neighbor(e_index, e_from, e_to, e_label) Rel_Back_Neighbor(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2_Back_Neighbor(e_index, e_from, e_to, e_label, e_techn) Rel_Back_Neighbor(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!define Interact2_D(e_index, e_from, e_to, e_label) Rel_D(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2_D(e_index, e_from, e_to, e_label, e_techn) Rel_D(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"!define Interact2_Down(e_index, e_from, e_to, e_label) Rel_Down(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2_Down(e_index, e_from, e_to, e_label, e_techn) Rel_Down(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!define Interact2_U(e_index, e_from, e_to, e_label) Rel_U(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2_U(e_index, e_from, e_to, e_label, e_techn) Rel_U(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"!define Interact2_Up(e_index, e_from, e_to, e_label) Rel_Up(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2_Up(e_index, e_from, e_to, e_label, e_techn) Rel_Up(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!define Interact2_L(e_index, e_from, e_to, e_label) Rel_L(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2_L(e_index, e_from, e_to, e_label, e_techn) Rel_L(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"!define Interact2_Left(e_index, e_from, e_to, e_label) Rel_Left(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2_Left(e_index, e_from, e_to, e_label, e_techn) Rel_Left(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!define Interact2_R(e_index, e_from, e_to, e_label) Rel_R(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2_R(e_index, e_from, e_to, e_label, e_techn) Rel_R(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"!define Interact2_Right(e_index, e_from, e_to, e_label) Rel_Right(e_from, e_to, ""e_index: e_label"")");
-                        writer.WriteLine(@"!define Interact2_Right(e_index, e_from, e_to, e_label, e_techn) Rel_Right(e_from, e_to, ""e_index: e_label"", e_techn)");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!unquoted function Interact($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!unquoted function Interact_Back($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2_Back($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_Back($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2_Back($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!unquoted function Interact_Neighbor($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2_Neighbor($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_Neighbor($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2_Neighbor($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!unquoted function Interact_Back_Neighbor($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2_Back_Neighbor($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_Back_Neighbor($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2_Back_Neighbor($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!unquoted function Interact_D($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2_D($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_D($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2_D($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_Down($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2_Down($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_Down($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2_Down($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!unquoted function Interact_U($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2_U($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_U($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2_U($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_Up($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2_Up($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_Up($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2_Up($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!unquoted function Interact_L($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2_L($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_L($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2_L($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_Left($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2_Left($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_Left($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2_Left($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!unquoted function Interact_R($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2_R($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_R($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2_R($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_Right($e_from, $e_to, $e_label) ");
-                        writer.WriteLine(@"  Interact2_Right($index, ""$e_from"", ""$e_to"", ""$e_label"")");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                        writer.WriteLine(@"!unquoted function Interact_Right($e_from, $e_to, $e_label, $e_techn) ");
-                        writer.WriteLine(@"  Interact2_Right($index, ""$e_from"", ""$e_to"", ""$e_label"", $e_techn)");
-                        writer.WriteLine(@"  !$index=$inc_($index)");
-                        writer.WriteLine(@"!endfunction");
-                    }
+                    writer.WriteLine(!string.IsNullOrWhiteSpace(CustomBaseUrl)
+                        ? $"!includeurl {CustomBaseUrl}C4_Dynamic.puml"
+                        : $"!include <C4/C4_Dynamic>");
                     break;
 
                 case DeploymentView _:
-                    if (!string.IsNullOrWhiteSpace(CustomBaseUrl))
-                    {
-                        writer.WriteLine($"!includeurl {CustomBaseUrl}C4_Deployment.puml");
-                    }
-                    else
-                    {
-                        writer.WriteLine(@"!include <C4/C4_Container>");
-                        // Add missing deployment nodes (until they are part of the plantuml macros)
-                        writer.WriteLine(@"' C4_Deployment.puml is missing, simulate it with following definitions");
-
-                        writer.WriteLine(@"' Scope: A single software system.");
-                        writer.WriteLine(@"' Primary elements: Deployment nodes and containers within the software system in scope.");
-                        writer.WriteLine(@"' Intended audience: Technical people inside and outside of the software development team; including software architects, developers and operations/support staff.");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"' Colors");
-                        writer.WriteLine(@"' ##################################");
-                        writer.WriteLine(@"!define NODE_FONT_COLOR    #444444");
-                        writer.WriteLine(@"!define NODE_BG_COLOR      #FFFFFF");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"' Styling");
-                        writer.WriteLine(@"' ##################################");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"skinparam rectangle<<node>> {");
-                        writer.WriteLine(@"  Shadowing false");
-                        writer.WriteLine(@"  StereotypeFontSize 0");
-                        writer.WriteLine(@"  FontColor NODE_FONT_COLOR");
-                        writer.WriteLine(@"  BackgroundColor NODE_BG_COLOR");
-                        writer.WriteLine(@"  BorderColor #444444");
-                        writer.WriteLine(@"}");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"' Layout");
-                        writer.WriteLine(@"' ##################################");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"!definelong LAYOUT_WITH_LEGEND");
-                        writer.WriteLine(@"hide stereotype");
-                        writer.WriteLine(@"legend right");
-                        writer.WriteLine(@"|=                    |= Type                |");
-                        writer.WriteLine(@"|<NODE_BG_COLOR>      | deployment node      |");
-                        writer.WriteLine(@"|<CONTAINER_BG_COLOR> | deployment container |");
-                        writer.WriteLine(@"endlegend");
-                        writer.WriteLine(@"!enddefinelong");
-                        writer.WriteLine(@"");
-                        writer.WriteLine(@"' Nodes");
-                        writer.WriteLine(@"' ##################################");
-                        writer.WriteLine(@"' PlantUML does not support automatic line breaks of container, if e_techn is very long insert line breaks with ");
-                        writer.WriteLine(@"' ""</size>\n<size:TECHN_FONT_SIZE>""");
-                        writer.WriteLine(@"!define Node(e_alias, e_label, e_techn) rectangle ""==e_label\n<size:TECHN_FONT_SIZE>[e_techn]</size>"" <<node>> as e_alias");
-                    }
+                    writer.WriteLine(!string.IsNullOrWhiteSpace(CustomBaseUrl)
+                        ? $"!includeurl {CustomBaseUrl}C4_Deployment.puml"
+                        : $"!include <C4/C4_Deployment>");
                     break;
 
                 default:
@@ -570,8 +365,6 @@ namespace Structurizr.IO.C4PlantUML
             writer.WriteLine("title " + GetTitle(view));
             writer.WriteLine();
 
-            if (LayoutWithLegend)
-                writer.WriteLine("LAYOUT_WITH_LEGEND()");  // C4 PlantUML workaround add ()
             if (LayoutAsSketch)
                 writer.WriteLine("LAYOUT_AS_SKETCH()");  // C4 PlantUML workaround add ()
             if (Layout.HasValue)
@@ -588,8 +381,23 @@ namespace Structurizr.IO.C4PlantUML
                         throw new InvalidOperationException($"Unknown {nameof(LayoutDirection)} value");
                 }
             }
-            if (LayoutWithLegend || LayoutAsSketch || Layout.HasValue)
+            if (LayoutAsSketch || Layout.HasValue)
                 writer.WriteLine();
+        }
+
+        protected virtual void WriteEpilog(View view, TextWriter writer)
+        {
+            if (view == null) throw new ArgumentNullException(nameof(view));
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
+
+            if (LayoutWithLegend)
+            {
+                writer.WriteLine();
+                writer.WriteLine("SHOW_LEGEND()");  // C4 PlantUML workaround add ()
+            }
+
+            writer.WriteLine("@enduml");
+            writer.WriteLine("");
         }
 
         protected virtual void Write(Element element, TextWriter writer, int indentLevel = 0, bool asBoundary = false)
@@ -617,10 +425,6 @@ namespace Structurizr.IO.C4PlantUML
                         macro = "Node";
                         title = deploymentNode.Name + (deploymentNode.Instances > 1 ? $" (x{deploymentNode.Instances})" : "");
                         technology = deploymentNode.Technology;
-                        // PlantUML supports no automatic line breaks of titles, if it belongs to a surrounding object
-                        // make workaround with html tags (they are not working via multiple lines too)
-                        if (technology.Length > 30)
-                            technology = BlockText(technology, 30, @"</size>\n<size:TECHN_FONT_SIZE>");
                         break;
                     default:
                         throw new NotSupportedException($"{element.GetType()} not supported boundary type");
@@ -658,6 +462,12 @@ namespace Structurizr.IO.C4PlantUML
                         macro = "Component";
                         technology = cmp.Technology ?? "";
                         isDatabase = cmp.GetIsDatabase();
+                        break;
+                    case SoftwareSystemInstance sysIn:
+                        macro = "System";
+                        title = sysIn.SoftwareSystem.Name;
+                        description = sysIn.SoftwareSystem.Description;
+                        external = sysIn.SoftwareSystem.Location == Location.External;
                         break;
                     case ContainerInstance cntIn:
                         macro = "Container";
@@ -706,6 +516,13 @@ namespace Structurizr.IO.C4PlantUML
                 label = advancedDescription ?? relationship.Description ?? "",
                 tech = !string.IsNullOrWhiteSpace(relationship.Technology) ? relationship.Technology : null;
 
+            if (relationshipView.Response ?? false)
+            {
+                var swap = source;
+                source = dest;
+                dest = swap;
+            }
+
             var macro = GetSpecificLayoutMacro(relationshipView);
 
             writer.Write($"{macro}({source}, {dest}, \"{EscapeText(label)}\"");
@@ -729,8 +546,15 @@ namespace Structurizr.IO.C4PlantUML
                 dest = TokenizeName(relationship.Destination),
                 tech = !string.IsNullOrWhiteSpace(relationship.Technology) ? relationship.Technology : null;
 
+            if (relationshipView.Response ?? false)
+            {
+                var swap = source;
+                source = dest;
+                dest = swap;
+            }
+
             var macro = GetSpecificLayoutMacro(relationshipView);
-            macro = "Interact2" + macro.Substring("Rel".Length);
+            macro = "RelIndex" + macro.Substring("Rel".Length);
 
             writer.Write($"{macro}(\"{order}\", {source}, {dest}, \"{EscapeText(label)}\"");
             if (tech != null)

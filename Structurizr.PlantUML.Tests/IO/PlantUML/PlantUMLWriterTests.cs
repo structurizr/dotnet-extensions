@@ -101,7 +101,7 @@ actor ""User"" <<Person>> as 1
 @enduml
 
 @startuml
-title Software System - Deployment
+title Software System - Deployment - Default
 node ""Database Server"" <<Ubuntu 12.04 LTS>> as 23 {
   node ""MySQL"" <<MySQL 5.5.x>> as 24 {
     artifact ""Database"" <<Container>> as 25
@@ -254,7 +254,7 @@ actor ""User"" <<Person>> as 1
     
             Assert.Equal(
 @"@startuml
-title Software System - Deployment
+title Software System - Deployment - Default
 node ""Database Server"" <<Ubuntu 12.04 LTS>> as 23 {
   node ""MySQL"" <<MySQL 5.5.x>> as 24 {
     artifact ""Database"" <<Container>> as 25
