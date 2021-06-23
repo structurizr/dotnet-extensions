@@ -29,14 +29,14 @@ namespace Structurizr.IO.C4PlantUML.Tests
             _workspace = BigBankPlc.Create();
             AddLayoutDetails(_workspace);
 
-/*
-            using (var writer = new StringWriter())
-            {
-                new Structurizr.IO.Json.JsonWriter(true).Write(_workspace, writer);
-                var json = writer.GetStringBuilder().ToString();
-                json = json;
-            }
-*/
+            /*
+                        using (var writer = new StringWriter())
+                        {
+                            new Structurizr.IO.Json.JsonWriter(true).Write(_workspace, writer);
+                            var json = writer.GetStringBuilder().ToString();
+                            json = json;
+                        }
+            */
 
             _plantUMLWriter.Write(_workspace, _stringWriter);
             Assert.Equal(
@@ -60,10 +60,10 @@ Rel_Down(BackOfficeStaff__5f761d, MainframeBankingSystem__f50ffa, ""Uses"")
 Rel_Down(CustomerServiceStaff__a35be5, MainframeBankingSystem__f50ffa, ""Uses"")
 Rel_Up(EmailSystem__2908eb9, PersonalBankingCustomer__9bc576, ""Sends e-mails to"")
 Rel_Down(InternetBankingSystem__2aef74c, EmailSystem__2908eb9, ""Sends e-mail using"")
-Rel_Down(InternetBankingSystem__2aef74c, MainframeBankingSystem__f50ffa, ""Uses"")
+Rel_Down(InternetBankingSystem__2aef74c, MainframeBankingSystem__f50ffa, ""Gets account information from, and makes payments using"")
 Rel(PersonalBankingCustomer__9bc576, ATM__22fc739, ""Withdraws cash using"")
 Rel(PersonalBankingCustomer__9bc576, CustomerServiceStaff__a35be5, ""Asks questions to"", ""Telephone"")
-Rel(PersonalBankingCustomer__9bc576, InternetBankingSystem__2aef74c, ""Uses"")
+Rel(PersonalBankingCustomer__9bc576, InternetBankingSystem__2aef74c, ""Views account balances, and makes payments using"")
 
 SHOW_LEGEND()
 @enduml
@@ -80,8 +80,8 @@ System(MainframeBankingSystem__f50ffa, ""Mainframe Banking System"", ""Stores al
 Person_Ext(PersonalBankingCustomer__9bc576, ""Personal Banking Customer"", ""A customer of the bank, with personal bank accounts."")
 Rel_Up(EmailSystem__2908eb9, PersonalBankingCustomer__9bc576, ""Sends e-mails to"")
 Rel_Right(InternetBankingSystem__2aef74c, EmailSystem__2908eb9, ""Sends e-mail using"")
-Rel(InternetBankingSystem__2aef74c, MainframeBankingSystem__f50ffa, ""Uses"")
-Rel(PersonalBankingCustomer__9bc576, InternetBankingSystem__2aef74c, ""Uses"")
+Rel(InternetBankingSystem__2aef74c, MainframeBankingSystem__f50ffa, ""Gets account information from, and makes payments using"")
+Rel(PersonalBankingCustomer__9bc576, InternetBankingSystem__2aef74c, ""Views account balances, and makes payments using"")
 
 SHOW_LEGEND()
 @enduml
@@ -104,12 +104,12 @@ System_Boundary(InternetBankingSystem__2aef74c, ""Internet Banking System"") {
 }
 Rel_Left(InternetBankingSystem__APIApplication__2c36bed, InternetBankingSystem__Database__18307f7, ""Reads from and writes to"", ""JDBC"")
 Rel_Up(InternetBankingSystem__APIApplication__2c36bed, EmailSystem__2908eb9, ""Sends e-mail using"", ""SMTP"")
-Rel_Left(InternetBankingSystem__APIApplication__2c36bed, MainframeBankingSystem__f50ffa, ""Uses"", ""XML/HTTPS"")
+Rel_Left(InternetBankingSystem__APIApplication__2c36bed, MainframeBankingSystem__f50ffa, ""Makes API calls to"", ""XML/HTTPS"")
 Rel_Up(EmailSystem__2908eb9, PersonalBankingCustomer__9bc576, ""Sends e-mails to"")
 Rel(InternetBankingSystem__MobileApp__38a070b, InternetBankingSystem__APIApplication__2c36bed, ""Makes API calls to"", ""JSON/HTTPS"")
-Rel(PersonalBankingCustomer__9bc576, InternetBankingSystem__MobileApp__38a070b, ""Uses"")
-Rel(PersonalBankingCustomer__9bc576, InternetBankingSystem__SinglePageApplication__1414c79, ""Uses"")
-Rel(PersonalBankingCustomer__9bc576, InternetBankingSystem__WebApplication__1bb919c, ""Uses"", ""HTTPS"")
+Rel(PersonalBankingCustomer__9bc576, InternetBankingSystem__MobileApp__38a070b, ""Views account balances, and makes payments using"")
+Rel(PersonalBankingCustomer__9bc576, InternetBankingSystem__SinglePageApplication__1414c79, ""Views account balances, and makes payments using"")
+Rel(PersonalBankingCustomer__9bc576, InternetBankingSystem__WebApplication__1bb919c, ""Visits bigbank.com/ib using"", ""HTTPS"")
 Rel(InternetBankingSystem__SinglePageApplication__1414c79, InternetBankingSystem__APIApplication__2c36bed, ""Makes API calls to"", ""JSON/HTTPS"")
 Rel_Right(InternetBankingSystem__WebApplication__1bb919c, InternetBankingSystem__SinglePageApplication__1414c79, ""Delivers to the customer's web browser"")
 
@@ -165,8 +165,11 @@ Container_Boundary(InternetBankingSystem__APIApplication__2c36bed, ""API Applica
   Component(InternetBankingSystem__APIApplication__SignInController__22cc62b, ""Sign In Controller"", ""Spring MVC Rest Controller"", ""Allows users to sign in to the Internet Banking System."")
 }
 RelIndex_Right(""1"", InternetBankingSystem__SinglePageApplication__1414c79, InternetBankingSystem__APIApplication__SignInController__22cc62b, ""Submits credentials to"", ""JSON/HTTPS"")
-RelIndex(""2"", InternetBankingSystem__APIApplication__SignInController__22cc62b, InternetBankingSystem__APIApplication__SecurityComponent__a4474, ""Calls isAuthenticated() on"")
+RelIndex(""2"", InternetBankingSystem__APIApplication__SignInController__22cc62b, InternetBankingSystem__APIApplication__SecurityComponent__a4474, ""Validates credentials using"")
 RelIndex_Right(""3"", InternetBankingSystem__APIApplication__SecurityComponent__a4474, InternetBankingSystem__Database__18307f7, ""select * from users where username = ?"", ""JDBC"")
+RelIndex_Left(""4"", InternetBankingSystem__Database__18307f7, InternetBankingSystem__APIApplication__SecurityComponent__a4474, ""Returns user data to"", ""JDBC"")
+RelIndex(""5"", InternetBankingSystem__APIApplication__SecurityComponent__a4474, InternetBankingSystem__APIApplication__SignInController__22cc62b, ""Returns true if the hashed password matches"")
+RelIndex_Left(""6"", InternetBankingSystem__APIApplication__SignInController__22cc62b, InternetBankingSystem__SinglePageApplication__1414c79, ""Sends back an authentication token to"", ""JSON/HTTPS"")
 
 SHOW_LEGEND()
 @enduml
@@ -177,6 +180,11 @@ SHOW_LEGEND()
 ' Structurizr.DeploymentView: DevelopmentDeployment
 title Internet Banking System - Deployment - Development
 
+Node(BigBankplc__13491b2, ""Big Bank plc"", ""Big Bank plc data center"") {
+  Node(bigbankdev001__2f4813f, ""bigbank-dev001"") {
+    System(MainframeBankingSystem1__1b2a42c, ""Mainframe Banking System"", ""Stores all of the core banking information about customers, accounts, transactions, etc."")
+  }
+}
 Node(DeveloperLaptop__389f399, ""Developer Laptop"", ""Microsoft Windows 10 or Apple macOS"") {
   Node(DockerContainerWebServer__1b73d2e, ""Docker Container - Web Server"", ""Docker"") {
     Node(ApacheTomcat__1cc9f55, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
@@ -189,11 +197,12 @@ Node(DeveloperLaptop__389f399, ""Developer Laptop"", ""Microsoft Windows 10 or A
       ContainerDb(InternetBankingSystem__Database1__3296ca6, ""Database"", ""Relational Database Schema"", ""Stores user registration information, hashed authentication credentials, access logs, etc."")
     }
   }
-  Node(WebBrowser__3930fd, ""Web Browser"", ""Google Chrome, Mozilla Firefox, Apple Safari or Microsoft Edge"") {
+  Node(WebBrowser__3930fd, ""Web Browser"", ""Chrome, Firefox, Safari, or Edge"") {
     Container(InternetBankingSystem__SinglePageApplication1__bbe85d, ""Single-Page Application"", ""JavaScript and Angular"", ""Provides all of the Internet banking functionality to customers via their web browser."")
   }
 }
 Rel(InternetBankingSystem__APIApplication1__1f227f4, InternetBankingSystem__Database1__3296ca6, ""Reads from and writes to"", ""JDBC"")
+Rel(InternetBankingSystem__APIApplication1__1f227f4, MainframeBankingSystem1__1b2a42c, ""Makes API calls to"", ""XML/HTTPS"")
 Rel(InternetBankingSystem__SinglePageApplication1__bbe85d, InternetBankingSystem__APIApplication1__1f227f4, ""Makes API calls to"", ""JSON/HTTPS"")
 Rel_Up(InternetBankingSystem__WebApplication1__28f79f6, InternetBankingSystem__SinglePageApplication1__bbe85d, ""Delivers to the customer's web browser"")
 
@@ -207,6 +216,9 @@ SHOW_LEGEND()
 title Internet Banking System - Deployment - Live
 
 Node(BigBankplc__3ffe15e, ""Big Bank plc"", ""Big Bank plc data center"") {
+  Node(bigbankprod001__f5e94d, ""bigbank-prod001"") {
+    System(MainframeBankingSystem1__3db6dd2, ""Mainframe Banking System"", ""Stores all of the core banking information about customers, accounts, transactions, etc."")
+  }
   Node(bigbankweb***__3f92e18, ""bigbank-web*** (x4)"", ""Ubuntu 16.04 LTS"") {
     Node(ApacheTomcat__27b4383, ""Apache Tomcat"", ""Apache Tomcat 8.x"") {
       Container(InternetBankingSystem__WebApplication1__1720850, ""Web Application"", ""Java and Spring MVC"", ""Delivers the static content and the Internet banking single page application."")
@@ -229,7 +241,7 @@ Node(BigBankplc__3ffe15e, ""Big Bank plc"", ""Big Bank plc data center"") {
   }
 }
 Node(Customer'scomputer__2510bf3, ""Customer's computer"", ""Microsoft Windows or Apple macOS"") {
-  Node(WebBrowser__ba951, ""Web Browser"", ""Google Chrome, Mozilla Firefox, Apple Safari or Microsoft Edge"") {
+  Node(WebBrowser__ba951, ""Web Browser"", ""Chrome, Firefox, Safari, or Edge"") {
     Container(InternetBankingSystem__SinglePageApplication1__298b31c, ""Single-Page Application"", ""JavaScript and Angular"", ""Provides all of the Internet banking functionality to customers via their web browser."")
   }
 }
@@ -238,6 +250,7 @@ Node(Customer'smobiledevice__1d6bcb6, ""Customer's mobile device"", ""Apple iOS 
 }
 Rel(InternetBankingSystem__APIApplication1__1408a33, InternetBankingSystem__Database1__1c974ec, ""Reads from and writes to"", ""JDBC"")
 Rel(InternetBankingSystem__APIApplication1__1408a33, InternetBankingSystem__Database1__d89394, ""Reads from and writes to"", ""JDBC"")
+Rel(InternetBankingSystem__APIApplication1__1408a33, MainframeBankingSystem1__3db6dd2, ""Makes API calls to"", ""XML/HTTPS"")
 Rel(InternetBankingSystem__MobileApp1__d004b3, InternetBankingSystem__APIApplication1__1408a33, ""Makes API calls to"", ""JSON/HTTPS"")
 Rel_Left(OraclePrimary__19fd8f, OracleSecondary__1c4ec22, ""Replicates data to"")
 Rel(InternetBankingSystem__SinglePageApplication1__298b31c, InternetBankingSystem__APIApplication1__1408a33, ""Makes API calls to"", ""JSON/HTTPS"")
@@ -288,8 +301,10 @@ SHOW_LEGEND()
                 .SetDirection(DirectionValues.Down);
 
             // DynamicView
-            //     Rel_Right(InternetBankingSystem__SinglePageApplication, InternetBankingSystem__APIApplication__SignInController, ...)
-            //     Rel_Right(InternetBankingSystem__APIApplication__SecurityComponent, InternetBankingSystem__Database, ...)
+            //     RelIndex_Right(""1"", InternetBankingSystem__SinglePageApplication__1414c79, InternetBankingSystem__APIApplication__SignInController__22cc62b, ""Submits credentials to"", ""JSON/HTTPS"")
+            //     RelIndex_Right(""3"", InternetBankingSystem__APIApplication__SecurityComponent__a4474, InternetBankingSystem__Database__18307f7, ""select * from users where username = ?"", ""JDBC"")
+            //     Response switch displayed order - RelIndex_Left(""4"", InternetBankingSystem__Database__18307f7, InternetBankingSystem__APIApplication__SecurityComponent__a4474, ""Returns user data to"", ""JDBC"")
+            //     Response switch displayed order - RelIndex_Left(""6"", InternetBankingSystem__APIApplication__SignInController__22cc62b, InternetBankingSystem__SinglePageApplication__1414c79, ""Sends back an authentication token to"", ""JSON/HTTPS"")
             var singlePageApplication =
                 workspace.Model.GetElementWithCanonicalOrStaticalName("Container://Internet Banking System.Single-Page Application");
             var signInController =
@@ -300,12 +315,22 @@ SHOW_LEGEND()
             database.SetIsDatabase(true);
             var dynamicView = workspace.Views.DynamicViews.First();
             dynamicView.Relationships
-                .First(r => r.Relationship.SourceId == singlePageApplication.Id &&
-                            r.Relationship.DestinationId == signInController.Id)
+                .First(r =>
+                    !(r.Response ?? false) && r.Relationship.SourceId == securityComponent.Id && r.Relationship.DestinationId == database.Id)
                 .SetDirection(DirectionValues.Right);
             dynamicView.Relationships
-                .First(r => r.Relationship.SourceId == securityComponent.Id && r.Relationship.DestinationId == database.Id)
+                .First(r =>
+                    !(r.Response ?? false) && r.Relationship.SourceId == singlePageApplication.Id && r.Relationship.DestinationId == signInController.Id)
                 .SetDirection(DirectionValues.Right);
+            // response swaps display order 
+            dynamicView.Relationships
+                .First(r =>
+                            (r.Response ?? false) && r.Relationship.SourceId == securityComponent.Id && r.Relationship.DestinationId == database.Id)
+                .SetDirection(DirectionValues.Left);
+            dynamicView.Relationships
+                .First(r =>
+                    (r.Response ?? false) && r.Relationship.SourceId == singlePageApplication.Id && r.Relationship.DestinationId == signInController.Id)
+                .SetDirection(DirectionValues.Left);
 
             // ContainerView
             //     Rel_Up(InternetBankingSystem__WebApplication, InternetBankingSystem__SinglePageApplication, "Delivers to the customer's web browser")
@@ -339,7 +364,7 @@ SHOW_LEGEND()
             //     Rel_Left(Live__BigBankplc__bigbankdb01__OraclePrimary, Live__BigBankplc__bigbankdb02__OracleSecondary, "Replicates data to")
 
             // Model is changed that instances are counted per parent orig ...[2] cannot be used anymore, separate per view, full names have to be used
-            var developmentWebApplication = 
+            var developmentWebApplication =
                 workspace.Model.GetElementWithCanonicalOrStaticalName("ContainerInstance://Development/Developer Laptop/Docker Container - Web Server/Apache Tomcat/Internet Banking System.Web Application[1]");
             var developmentSinglePageApplication =
                 workspace.Model.GetElementWithCanonicalOrStaticalName("ContainerInstance://Development/Developer Laptop/Web Browser/Internet Banking System.Single-Page Application[1]");
@@ -349,7 +374,7 @@ SHOW_LEGEND()
                             r.Relationship.DestinationId == developmentSinglePageApplication.Id)
                 .SetDirection(DirectionValues.Up);
 
-            var liveWebApplication = 
+            var liveWebApplication =
                 workspace.Model.GetElementWithCanonicalOrStaticalName("ContainerInstance://Live/Big Bank plc/bigbank-web***/Apache Tomcat/Internet Banking System.Web Application[1]");
             var liveSinglePageApplication =
                 workspace.Model.GetElementWithCanonicalOrStaticalName("ContainerInstance://Live/Customer's computer/Web Browser/Internet Banking System.Single-Page Application[1]");

@@ -6,6 +6,9 @@ using Structurizr.IO.C4PlantUML.ModelExtensions;
 
 // Source base version copied from https://gist.github.com/coldacid/465fa8f3a4cd3fdd7b640a65ad5b86f4 (https://github.com/structurizr/dotnet/issues/47) 
 // kirchsth: Extended with dynamic and deployment view
+// kirchsth: updated to update generated source to new C4PlantUml stdlib v2.2.0 (no additional dynamic and deployment view macros are required anymore, calls updated)
+// kirchsth: Add tags/styles support
+// kirchsth: next planed C4PlantUml stdlib v2.3.0 features can be used with CustomBaseUrl https://raw.githubusercontent.com/kirchsth/C4-PlantUML/extended/
 namespace Structurizr.IO.C4PlantUML
 {
     public class C4PlantUmlWriter : PlantUMLWriterBase
@@ -23,12 +26,13 @@ namespace Structurizr.IO.C4PlantUML
         public LayoutDirection? Layout { get; set; }
 
         /// <summary>
-        /// PlantUML-stdlib or https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/ does not support
-        /// dynamic or deployment diagrams. They can be used via the PlantUML-stdlib and in the diagram added definitions
-        /// or use a pull-request version which is available at https://raw.githubusercontent.com/kirchsth/C4-PlantUML/extended/
+        /// C4PlantUml stdlib v2.2.0 () supports dynamic or deployment diagrams. They can be used via the PlantUML-stdlib and no 
+        /// special CustomBaseUrl is required.
+        /// Only next stdlib features (like Person shapes) has to be defined via CustomBaseUrl=https://raw.githubusercontent.com/kirchsth/C4-PlantUML/extended/
         /// (if the value is empty/null then PlantUML-stdlib with added definitions is used)
         /// </summary>
         public string CustomBaseUrl { get; set; } = ""; // @"https://raw.githubusercontent.com/kirchsth/C4-PlantUML/extended/";
+        public bool EnableNextFeatures { get; set; } = false;
 
         protected override void Write(SystemLandscapeView view, TextWriter writer)
         {
@@ -258,6 +262,11 @@ namespace Structurizr.IO.C4PlantUML
                 Write(containerInstance, writer, indentLevel + 1);
             }
 
+            foreach (SoftwareSystemInstance systemInstance in deploymentNode.SoftwareSystemInstances)
+            {
+                Write(systemInstance, writer, indentLevel + 1);
+            }
+
             writer.WriteLine($"{indent}}}");
         }
 
@@ -294,6 +303,11 @@ namespace Structurizr.IO.C4PlantUML
             if (e is ContainerInstance)
             {
                 return "Container";
+            }
+
+            if (e is SoftwareSystemInstance)
+            {
+                return "Software System";
             }
 
             return "";
@@ -449,6 +463,12 @@ namespace Structurizr.IO.C4PlantUML
                         technology = cmp.Technology ?? "";
                         isDatabase = cmp.GetIsDatabase();
                         break;
+                    case SoftwareSystemInstance sysIn:
+                        macro = "System";
+                        title = sysIn.SoftwareSystem.Name;
+                        description = sysIn.SoftwareSystem.Description;
+                        external = sysIn.SoftwareSystem.Location == Location.External;
+                        break;
                     case ContainerInstance cntIn:
                         macro = "Container";
                         title = cntIn.Container.Name;
@@ -496,6 +516,13 @@ namespace Structurizr.IO.C4PlantUML
                 label = advancedDescription ?? relationship.Description ?? "",
                 tech = !string.IsNullOrWhiteSpace(relationship.Technology) ? relationship.Technology : null;
 
+            if (relationshipView.Response ?? false)
+            {
+                var swap = source;
+                source = dest;
+                dest = swap;
+            }
+
             var macro = GetSpecificLayoutMacro(relationshipView);
 
             writer.Write($"{macro}({source}, {dest}, \"{EscapeText(label)}\"");
@@ -518,6 +545,13 @@ namespace Structurizr.IO.C4PlantUML
                 source = TokenizeName(relationship.Source),
                 dest = TokenizeName(relationship.Destination),
                 tech = !string.IsNullOrWhiteSpace(relationship.Technology) ? relationship.Technology : null;
+
+            if (relationshipView.Response ?? false)
+            {
+                var swap = source;
+                source = dest;
+                dest = swap;
+            }
 
             var macro = GetSpecificLayoutMacro(relationshipView);
             macro = "RelIndex" + macro.Substring("Rel".Length);
