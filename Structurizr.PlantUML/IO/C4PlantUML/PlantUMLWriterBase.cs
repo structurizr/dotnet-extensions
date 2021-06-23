@@ -198,45 +198,6 @@ namespace Structurizr.IO.C4PlantUML
                 ? String.IsNullOrWhiteSpace(view.Title) ? view.Name : view.Title
                 : throw new ArgumentNullException(nameof(view));
 
-        protected string BlockText(string s, int blockWidth, string formattedLineBreak)
-        {
-            var block = s;
-
-            if (blockWidth > 0 && !s.Contains("\n") && !s.Contains("\r"))
-            {
-                var formatted = new StringBuilder();
-                int pos = 0;
-                string word = "";
-
-                foreach (var c in s)
-                {
-                    word += c;
-                    if (c == ' ')
-                    {
-                        if (pos != 0 && pos + word.Length > blockWidth)
-                        {
-                            formatted.Append(formattedLineBreak);
-                            pos = 0;
-                        }
-                        formatted.Append(word);
-                        pos += word.Length;
-                        word = "";
-                    }
-                }
-
-                if (word.Length > 0)
-                {
-                    if (pos != 0 && pos + word.Length > blockWidth)
-                        formatted.Append(formattedLineBreak);
-                    formatted.Append(word);
-                }
-
-                block = formatted.ToString();
-            }
-
-            return block;
-        }
-
         protected string EscapeText(string s) => s.Replace("\"", "&quot;");
     }
 }

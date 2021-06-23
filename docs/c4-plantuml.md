@@ -10,7 +10,7 @@ Structurizr for .NET also includes a simple exporter that can create diagram def
 - Deployment*
 
 *..Dynamic and Deployment diagrams are part of an open pull request (from https://github.com/kirchsth/C4-PlantUML). The diagrams can use the definitions via 
-CustomBaseUrl=https://raw.githubusercontent.com/kirchsth/C4-PlantUML/master/ or if it is not set then the definition is merged in each diagram)
+CustomBaseUrl=https://raw.githubusercontent.com/kirchsth/C4-PlantUML/extended/ or if it is not set then the definition is merged in each diagram)
 
 Simply create your software architecture model and views as usual, and use the [C4PlantUMLWriter](../Structurizr.PlantUML/IO/C4PlantUML/C4PlantUMLWriter.cs) class to export the views. [For example](../Structurizr.Examples/C4PlantUML.cs):
 
