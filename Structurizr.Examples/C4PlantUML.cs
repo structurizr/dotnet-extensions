@@ -42,13 +42,27 @@ namespace Structurizr.Examples
                 Console.WriteLine(stringWriter.ToString());
             }
 
-
+            //
+            // Mark containers or components as database or via tags
+            //
             Container webApplication = softwareSystem.AddContainer("Web Application", "Delivers content", "Java and spring MVC");
+            // Additional tag element
+            webApplication.Tags = "Single Page App";
+
             Container database = softwareSystem.AddContainer("Database", "Stores information", "Relational Database Schema");
             // Additional mark it as database
             database.SetIsDatabase(true);
-            user.Uses(webApplication, "uses", "HTTP");
+            
+            var httpCall = user.Uses(webApplication, "uses", "HTTP");
+            // Additional tag relationship
+            httpCall.Tags = "via firewall";
+
             webApplication.Uses(database, "Reads from and writes to", "JDBC").SetDirection(DirectionValues.Right);
+
+            // add corresponding styles
+            var styles = views.Configuration.Styles;
+            styles.Add(new ElementStyle("Single Page App") {Background = "#5F9061", Stroke = "#2E4F2E", Color = "#FFFFFF", Shape = Shape.RoundedBox }); // rounded box is supported with next version see below
+            styles.Add(new RelationshipStyle("via firewall") {Color = "#B40404", Dashed  = true }); // dashed is supported with next version see below
 
             var containerView = views.CreateContainerView(softwareSystem, "containers", "");
             containerView.AddAllElements();
@@ -56,7 +70,20 @@ namespace Structurizr.Examples
             using (var stringWriter = new StringWriter())
             {
                 var plantUmlWriter = new C4PlantUmlWriter();
-                plantUmlWriter.Write(containerView, stringWriter);
+                plantUmlWriter.Write(containerView, workspace.Views.Configuration, stringWriter);
+                Console.WriteLine(stringWriter.ToString());
+            }
+
+            //
+            // Use features of the next planned C4-PlantUML version (v2.3.0 ?)
+            //
+            using (var stringWriter = new StringWriter())
+            {
+                var plantUmlWriter = new C4PlantUmlWriter();
+                plantUmlWriter.EnableNextFeatures = true;
+                plantUmlWriter.CustomBaseUrl = "https://raw.githubusercontent.com/kirchsth/C4-PlantUML/extended/";
+
+                plantUmlWriter.Write(containerView, workspace.Views.Configuration, stringWriter);
                 Console.WriteLine(stringWriter.ToString());
             }
         }

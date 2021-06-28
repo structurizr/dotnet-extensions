@@ -5,6 +5,8 @@ using System.Text;
 
 // Source base version copied from https://gist.github.com/coldacid/465fa8f3a4cd3fdd7b640a65ad5b86f4 (https://github.com/structurizr/dotnet/issues/47) 
 // kirchsth: Extended with dynamic and deployment view
+// kirchsth: Support ViewConfiguration, tags and styles
+
 namespace Structurizr.IO.C4PlantUML
 {
     /// <summary>
@@ -25,16 +27,17 @@ namespace Structurizr.IO.C4PlantUML
 
             CurrentViewModel = workspace.Model;
 
-            workspace.Views.SystemLandscapeViews.ToList().ForEach(v => Write(v, writer));
-            workspace.Views.SystemContextViews.ToList().ForEach(v => Write(v, writer));
-            workspace.Views.ContainerViews.ToList().ForEach(v => Write(v, writer));
-            workspace.Views.ComponentViews.ToList().ForEach(v => Write(v, writer));
-            workspace.Views.DynamicViews.ToList().ForEach(v => Write(v, writer));
-            workspace.Views.DeploymentViews.ToList().ForEach(v => Write(v, writer));
+            var viewConfiguration = workspace.Views.Configuration;
+            workspace.Views.SystemLandscapeViews.ToList().ForEach(v => Write(v, viewConfiguration, writer));
+            workspace.Views.SystemContextViews.ToList().ForEach(v => Write(v, viewConfiguration, writer));
+            workspace.Views.ContainerViews.ToList().ForEach(v => Write(v, viewConfiguration, writer));
+            workspace.Views.ComponentViews.ToList().ForEach(v => Write(v, viewConfiguration, writer));
+            workspace.Views.DynamicViews.ToList().ForEach(v => Write(v, viewConfiguration, writer));
+            workspace.Views.DeploymentViews.ToList().ForEach(v => Write(v, viewConfiguration, writer));
         }
 
         /// <inheritdoc/>
-        public void Write(View view, TextWriter writer)
+        public void Write(View view, ViewConfiguration viewConfiguration, TextWriter writer)
         {
             if (view == null) throw new ArgumentNullException(nameof(view));
             if (writer == null) throw new ArgumentNullException(nameof(writer));
@@ -44,22 +47,22 @@ namespace Structurizr.IO.C4PlantUML
             switch (view)
             {
                 case SystemLandscapeView sl:
-                    Write(sl, writer);
+                    Write(sl, viewConfiguration, writer);
                     break;
                 case SystemContextView sc:
-                    Write(sc, writer);
+                    Write(sc, viewConfiguration, writer);
                     break;
                 case ContainerView ct:
-                    Write(ct, writer);
+                    Write(ct, viewConfiguration, writer);
                     break;
                 case ComponentView cp:
-                    Write(cp, writer);
+                    Write(cp, viewConfiguration, writer);
                     break;
                 case DynamicView dy:
-                    Write(dy, writer);
+                    Write(dy, viewConfiguration, writer);
                     break;
                 case DeploymentView de:
-                    Write(de, writer);
+                    Write(de, viewConfiguration, writer);
                     break;
                 default:
                     throw new NotSupportedException($"{view.GetType()} not supported for export");
@@ -71,42 +74,42 @@ namespace Structurizr.IO.C4PlantUML
         /// </summary>
         /// <param name="view"></param>
         /// <param name="writer"></param>
-        protected abstract void Write(SystemLandscapeView view, TextWriter writer);
+        protected abstract void Write(SystemLandscapeView view, ViewConfiguration viewConfiguration, TextWriter writer);
 
         /// <summary>
         /// Writes a system context view in PlantUML format to the provided writer.
         /// </summary>
         /// <param name="view"></param>
         /// <param name="writer"></param>
-        protected abstract void Write(SystemContextView view, TextWriter writer);
+        protected abstract void Write(SystemContextView view, ViewConfiguration viewConfiguration, TextWriter writer);
 
         /// <summary>
         /// Writes a container view in PlantUML format to the provided writer.
         /// </summary>
         /// <param name="view"></param>
         /// <param name="writer"></param>
-        protected abstract void Write(ContainerView view, TextWriter writer);
+        protected abstract void Write(ContainerView view, ViewConfiguration viewConfiguration, TextWriter writer);
 
         /// <summary>
         /// Writes a component view in PlantUML format to the provided writer.
         /// </summary>
         /// <param name="view"></param>
         /// <param name="writer"></param>
-        protected abstract void Write(ComponentView view, TextWriter writer);
+        protected abstract void Write(ComponentView view, ViewConfiguration viewConfiguration, TextWriter writer);
 
         /// <summary>
         /// Writes a dynamic view in PlantUML format to the provided writer.
         /// </summary>
         /// <param name="view"></param>
         /// <param name="writer"></param>
-        protected abstract void Write(DynamicView view, TextWriter writer);
+        protected abstract void Write(DynamicView view, ViewConfiguration viewConfiguration, TextWriter writer);
 
         /// <summary>
         /// Writes a deployment view in PlantUML format to the provided writer.
         /// </summary>
         /// <param name="view"></param>
         /// <param name="writer"></param>
-        protected abstract void Write(DeploymentView view, TextWriter writer);
+        protected abstract void Write(DeploymentView view, ViewConfiguration viewConfiguration, TextWriter writer);
 
         /// <summary>
         /// Produces a standard PlantUML diagram prolog for the provided view.
@@ -115,7 +118,7 @@ namespace Structurizr.IO.C4PlantUML
         /// <param name="writer"></param>
         /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="writer"/> is <see langword="null"/>.</exception>
-        protected virtual void WriteProlog(View view, TextWriter writer)
+        protected virtual void WriteProlog(View view, ViewConfiguration viewConfiguration, TextWriter writer)
         {
             if (view == null) throw new ArgumentNullException(nameof(view));
             if (writer == null) throw new ArgumentNullException(nameof(writer));
@@ -132,7 +135,7 @@ namespace Structurizr.IO.C4PlantUML
         /// <param name="writer"></param>
         /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="writer"/> is <see langword="null"/>.</exception>
-        protected virtual void WriteEpilog(View view, TextWriter writer)
+        protected virtual void WriteEpilog(View view, ViewConfiguration viewConfiguration, TextWriter writer)
         {
             if (view == null) throw new ArgumentNullException(nameof(view));
             if (writer == null) throw new ArgumentNullException(nameof(writer));
@@ -177,6 +180,8 @@ namespace Structurizr.IO.C4PlantUML
                  .Replace("-", "")
                  .Replace("[", "")
                  .Replace("]", "")
+                 .Replace("(", "")
+                 .Replace(")", "")
                  .Replace(".", "__");
 
             if (hash.HasValue)
