@@ -106,7 +106,8 @@ namespace Structurizr.AdrTools.Tests
             importer.ImportArchitectureDecisionRecords();
 
             Decision decision5 = _documentation.Decisions.Where(d => d.Id == "5").First();
-            Assert.True(decision5.Content.Contains("Amended by [9. Help scripts](#/:9)"));
+            // sync with java impl %2F instead of /
+            Assert.True(decision5.Content.Contains("Amended by [9. Help scripts](#%2F:9)"));
         }
 
         [Fact]
@@ -127,7 +128,8 @@ namespace Structurizr.AdrTools.Tests
 
             Decision decision4 = _documentation.Decisions.Where(d => d.Id == "4").First();
             Assert.Equal(DecisionStatus.Superseded, decision4.Status);
-            Assert.True(decision4.Content.Contains("Superceded by [10. AsciiDoc format](#/:10)"));
+            // sync with java impl %2F instead of /
+            Assert.True(decision4.Content.Contains("Superceded by [10. AsciiDoc format](#%2F:10)"));
         }
 
     }

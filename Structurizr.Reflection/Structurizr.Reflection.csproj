@@ -20,11 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Structurizr.Core" Version="0.9.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Runtime" />
+    <PackageReference Include="Structurizr.Core" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

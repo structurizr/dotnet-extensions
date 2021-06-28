@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{4ED0E8DB-8A5B-4DF0-9CB1-995D97A04B88}"
 	ProjectSection(SolutionItems) = preProject
@@ -42,6 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{4FBA61
 	ProjectSection(SolutionItems) = preProject
 		docs\images\c4-plantuml-getting-started.png = docs\images\c4-plantuml-getting-started.png
 		docs\images\c4-plantuml-getting-started2.png = docs\images\c4-plantuml-getting-started2.png
+		docs\images\c4-plantuml-getting-started3.png = docs\images\c4-plantuml-getting-started3.png
 		docs\images\plantuml-getting-started.png = docs\images\plantuml-getting-started.png
 		docs\images\structurizr-annotations-1.png = docs\images\structurizr-annotations-1.png
 		docs\images\structurizr-banner.png = docs\images\structurizr-banner.png
